@@ -32,9 +32,9 @@ class RedactingFormatter(logging.Formatter):
 
     def format(self, record: logging.LogRecord) -> str:
         """Format the log record and redact the configured PII fields."""
-        message = filter_datum(self.fields, self.REDACTION,
-                               super().format(record), self.SEPARATOR)
-        return re.sub(r'{}(?=\S)'.format(self.SEPARATOR), '; ', message)
+        record.msg = filter_datum(self.fields, self.REDACTION,
+                                  record.getMessage(), self.SEPARATOR)
+        return super(RedactingFormatter, self).format(record)
 
 
 def get_logger() -> logging.Logger:
